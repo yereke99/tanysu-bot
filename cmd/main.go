@@ -28,7 +28,7 @@ func main() {
 
 	chatRedisState := repository.NewRedisClient(redisClient)
 
-	handler := handler.NewHandler(chatRedisState)
+	handler := handler.NewHandler(chatRedisState, nil)
 
 	opts := []bot.Option{
 		bot.WithCallbackQueryDataHandler("chat", bot.MatchTypePrefix, handler.ChatButtonHandler),
