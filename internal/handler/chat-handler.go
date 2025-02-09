@@ -109,15 +109,58 @@ func (c *ChatState) RemoveUser(id int64) {
 // Handlers содержит все методы-обработчики для бота
 type Handler struct {
 	chatState *repository.ChatRepository
+	userRepo  *repository.UserRepository
 }
 
-// NewHandlers создаёт новый экземпляр Handlers с переданным состоянием чата.
-func NewHandler(chatState *repository.ChatRepository) *Handler {
-	return &Handler{chatState: chatState}
+func NewHandler(chatState *repository.ChatRepository, userRepo *repository.UserRepository) *Handler {
+	return &Handler{chatState: chatState, userRepo: userRepo}
+}
+
+func (h *Handler) ensureUserInDB(update *models.Update) {
+	var userID int64
+	var username, firstName, lastName string
+
+	// Обрабатываем как обычное сообщение, так и CallbackQuery
+	if update.Message != nil {
+		userID = update.Message.From.ID
+		username = update.Message.From.Username
+		firstName = update.Message.From.FirstName
+		lastName = update.Message.From.LastName
+	} else if update.CallbackQuery != nil {
+		userID = update.CallbackQuery.From.ID
+		username = update.CallbackQuery.From.Username
+		firstName = update.CallbackQuery.From.FirstName
+		lastName = update.CallbackQuery.From.LastName
+	} else {
+		return
+	}
+
+	exists, err := h.userRepo.UserExists(userID)
+	if err != nil {
+		fmt.Println("Error checking user existence:", err)
+		return
+	}
+	if !exists {
+		newUser := &repository.User{
+			UserID:    userID,
+			UserName:  username,
+			FirstName: firstName,
+			LastName:  lastName,
+			// Остальные поля (Ava, AvaFileID, UserNickname, UserAge, UserSex, UserGeo, Contact) можно заполнить позже
+		}
+		if err := h.userRepo.InsertUser(newUser); err != nil {
+			fmt.Println("Error inserting user:", err)
+		} else {
+			fmt.Printf("User %d inserted into DB\n", userID)
+		}
+	}
 }
 
 // InlineHandler обрабатывает нажатие на кнопку выбора собеседника (select_).
 func (h *Handler) InlineHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
+	// Сохраняем пользователя, если он впервые зашел
+	h.ensureUserInDB(update)
+
 	userID := update.CallbackQuery.From.ID
 
 	// Извлекаем ID выбранного пользователя из данных колбэка.
@@ -165,6 +208,9 @@ func (h *Handler) InlineHandler(ctx context.Context, b *bot.Bot, update *models.
 
 // CallbackHandlerExit обрабатывает выход пользователя из чата.
 func (h *Handler) CallbackHandlerExit(ctx context.Context, b *bot.Bot, update *models.Update) {
+	// Сохраняем пользователя, если он впервые зашел
+	h.ensureUserInDB(update)
+
 	userID := update.CallbackQuery.From.ID
 	partnerID, err := h.chatState.GetUserPartner(ctx, userID)
 	if err != nil {
@@ -201,6 +247,9 @@ func (h *Handler) CallbackHandlerExit(ctx context.Context, b *bot.Bot, update *m
 
 // ChatButtonHandler формирует список пользователей для подключения и отправляет инлайн-кнопки.
 func (h *Handler) ChatButtonHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
+	// Сохраняем пользователя, если он впервые зашел
+	h.ensureUserInDB(update)
+
 	userID := update.CallbackQuery.From.ID
 
 	if err := h.chatState.AddUser(ctx, userID); err != nil {
@@ -239,11 +288,17 @@ func (h *Handler) ChatButtonHandler(ctx context.Context, b *bot.Bot, update *mod
 
 // MessageHandler перенаправляет обычные текстовые сообщения между собеседниками.
 func (h *Handler) MessageHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
+	// Сохраняем пользователя, если он впервые зашел
+	h.ensureUserInDB(update)
+
 	h.HandleChat(ctx, b, update, h.chatState)
 }
 
 // HelloHandler приветствует пользователя и выводит кнопку для входа в чат.
 func (h *Handler) HelloHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
+	// Сохраняем пользователя, если он впервые зашел
+	h.ensureUserInDB(update)
+
 	kb := keyboard.NewKeyboard()
 	kb.AddRow(keyboard.NewInlineButton("💬 Chat", "chat"))
 
