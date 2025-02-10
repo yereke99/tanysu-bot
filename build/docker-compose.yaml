@@ -12,14 +12,28 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"      # Ограничение 2 CPU
+          memory: "2GB"    # Ограничение 2GB RAM
+    command: postgres -c shared_buffers=512MB -c work_mem=16MB -c maintenance_work_mem=64MB -c max_connections=50
+    restart: always
 
   redis:
     image: redis:latest
     container_name: redis_container
+    command: redis-server --appendonly yes --maxmemory 1gb --maxmemory-policy allkeys-lru
     ports:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"      # Ограничение 1 CPU
+          memory: "1GB"    # Ограничение 1GB RAM
+    restart: always
 
 volumes:
   postgres_data:
