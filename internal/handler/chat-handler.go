@@ -652,7 +652,7 @@ func (h *Handler) HandleChat(ctx context.Context, b *bot.Bot, update *models.Upd
 			return
 		}
 		senderMsg, err := b.SendVideo(ctx, &bot.SendVideoParams{
-			ChatID:         partnerID,
+			ChatID:         update.Message.Chat.ID,
 			Video:          &models.InputFileString{Data: update.Message.Video.FileID},
 			Caption:        videoCaption,
 			ReplyMarkup:    kb.Build(),
@@ -700,7 +700,7 @@ func (h *Handler) HandleChat(ctx context.Context, b *bot.Bot, update *models.Upd
 			return
 		}
 		senderMsg, err := b.SendVoice(ctx, &bot.SendVoiceParams{
-			ChatID:         partnerID,
+			ChatID:         update.Message.Chat.ID,
 			Voice:          &models.InputFileString{Data: update.Message.Voice.FileID},
 			Caption:        voiceCaption,
 			ReplyMarkup:    kb.Build(),
@@ -745,7 +745,7 @@ func (h *Handler) HandleChat(ctx context.Context, b *bot.Bot, update *models.Upd
 			return
 		}
 		senderMsg, err := b.SendVideoNote(ctx, &bot.SendVideoNoteParams{
-			ChatID:         partnerID,
+			ChatID:         update.Message.Chat.ID,
 			VideoNote:      &models.InputFileString{Data: update.Message.VideoNote.FileID},
 			ReplyMarkup:    kb.Build(),
 			ProtectContent: true,
@@ -796,7 +796,7 @@ func (h *Handler) HandleChat(ctx context.Context, b *bot.Bot, update *models.Upd
 			return
 		}
 		senderMsg, err := b.SendDocument(ctx, &bot.SendDocumentParams{
-			ChatID:         partnerID,
+			ChatID:         update.Message.Chat.ID,
 			Document:       &models.InputFileString{Data: update.Message.Document.FileID},
 			Caption:        docCaption,
 			ReplyMarkup:    kb.Build(),
@@ -838,7 +838,7 @@ func (h *Handler) HandleChat(ctx context.Context, b *bot.Bot, update *models.Upd
 			return
 		}
 		senderMsg, err := b.SendAudio(ctx, &bot.SendAudioParams{
-			ChatID:         partnerID,
+			ChatID:         update.Message.Chat.ID,
 			Audio:          &models.InputFileString{Data: update.Message.Audio.FileID},
 			Caption:        audioCaption,
 			ReplyMarkup:    kb.Build(),
@@ -880,7 +880,7 @@ func (h *Handler) HandleChat(ctx context.Context, b *bot.Bot, update *models.Upd
 			return
 		}
 		senderMsg, err := b.SendLocation(ctx, &bot.SendLocationParams{
-			ChatID:         partnerID,
+			ChatID:         update.Message.Chat.ID,
 			Latitude:       update.Message.Location.Latitude,
 			Longitude:      update.Message.Location.Longitude,
 			ReplyMarkup:    kb.Build(),
@@ -920,7 +920,7 @@ func (h *Handler) HandleChat(ctx context.Context, b *bot.Bot, update *models.Upd
 			return
 		}
 		senderMsg, err := b.SendSticker(ctx, &bot.SendStickerParams{
-			ChatID:         partnerID,
+			ChatID:         update.Message.Chat.ID,
 			Sticker:        &models.InputFileString{Data: update.Message.Sticker.FileID},
 			ReplyMarkup:    kb.Build(),
 			ProtectContent: true,
@@ -972,7 +972,7 @@ func (h *Handler) HandleChat(ctx context.Context, b *bot.Bot, update *models.Upd
 			return
 		}
 		senderMsg, err := b.SendMessage(ctx, &bot.SendMessageParams{
-			ChatID:         partnerID,
+			ChatID:         update.Message.Chat.ID,
 			Text:           contactText,
 			ReplyMarkup:    kb.Build(),
 			ProtectContent: true,
@@ -1022,7 +1022,7 @@ func (h *Handler) HandleChat(ctx context.Context, b *bot.Bot, update *models.Upd
 			return
 		}
 		senderMsg, err := b.SendPoll(ctx, &bot.SendPollParams{
-			ChatID:         partnerID,
+			ChatID:         update.Message.Chat.ID,
 			Question:       poll.Question,
 			Options:        pollOptions,
 			ProtectContent: true,
