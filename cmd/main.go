@@ -26,14 +26,18 @@ func main() {
 	//chatState := handler.GetChatState()
 	redisClient := database.RedisConnection(cfg)
 
+	dbConn := database.DatabaseConnection(cfg)
+	userRepository := repository.NewRepository(dbConn)
 	chatRedisState := repository.NewRedisClient(redisClient)
 
-	handler := handler.NewHandler(chatRedisState, nil)
+	handler := handler.NewHandler(chatRedisState, userRepository, cfg)
 
 	opts := []bot.Option{
 		bot.WithCallbackQueryDataHandler("chat", bot.MatchTypePrefix, handler.ChatButtonHandler),
 		bot.WithCallbackQueryDataHandler("select_", bot.MatchTypePrefix, handler.InlineHandler),
+		bot.WithCallbackQueryDataHandler("send_geo", bot.MatchTypePrefix, handler.InlineHandler),
 		bot.WithCallbackQueryDataHandler("exit", bot.MatchTypePrefix, handler.CallbackHandlerExit),
+		bot.WithCallbackQueryDataHandler("delete_", bot.MatchTypePrefix, handler.DeleteMessageHandler),
 	}
 
 	// Replace with your bot token
