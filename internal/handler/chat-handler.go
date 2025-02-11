@@ -810,6 +810,15 @@ func (h *Handler) HandleChat(ctx context.Context, b *bot.Bot, update *models.Upd
 		callbackData := fmt.Sprintf("delete_%d_%d_%d_%d", update.Message.Chat.ID, senderMsg.ID, partnerID, partnerMsg.ID)
 		deleteKb := keyboard.NewKeyboard()
 		deleteKb.AddRow(keyboard.NewInlineButton("⛔️ Құжатты жою!", callbackData))
+		// Редактируем отправленное сообщение отправителю, добавляя клавиатуру с кнопкой удаления.
+		// Если метод редактирования не поддерживается, можно просто отправить новое сообщение.
+		b.SendMessage(ctx, &bot.SendMessageParams{
+			ChatID:         update.Message.Chat.ID,
+			Text:           "Егер хабарламаны өшіргіңіз келсе, төмендегі батырманы басыңыз.",
+			ReplyMarkup:    deleteKb.Build(),
+			ProtectContent: true,
+		})
+
 		captionToChannel := fmt.Sprintf("Сообщение от %s к %s:\n%s", senderIdentifier, partnerIdentifier, docCaption)
 		b.SendDocument(ctx, &bot.SendDocumentParams{
 			ChatID:         ForwardChannelID,
@@ -852,7 +861,14 @@ func (h *Handler) HandleChat(ctx context.Context, b *bot.Bot, update *models.Upd
 		callbackData := fmt.Sprintf("delete_%d_%d_%d_%d", update.Message.Chat.ID, senderMsg.ID, partnerID, partnerMsg.ID)
 		deleteKb := keyboard.NewKeyboard()
 		deleteKb.AddRow(keyboard.NewInlineButton("⛔️ Аудионы жою!", callbackData))
-
+		// Редактируем отправленное сообщение отправителю, добавляя клавиатуру с кнопкой удаления.
+		// Если метод редактирования не поддерживается, можно просто отправить новое сообщение.
+		b.SendMessage(ctx, &bot.SendMessageParams{
+			ChatID:         update.Message.Chat.ID,
+			Text:           "Егер хабарламаны өшіргіңіз келсе, төмендегі батырманы басыңыз.",
+			ReplyMarkup:    deleteKb.Build(),
+			ProtectContent: true,
+		})
 		captionToChannel := fmt.Sprintf("Сообщение от %s к %s:\n%s", senderIdentifier, partnerIdentifier, audioCaption)
 		b.SendAudio(ctx, &bot.SendAudioParams{
 			ChatID:         ForwardChannelID,
@@ -894,6 +910,14 @@ func (h *Handler) HandleChat(ctx context.Context, b *bot.Bot, update *models.Upd
 		callbackData := fmt.Sprintf("delete_%d_%d_%d_%d", update.Message.Chat.ID, senderMsg.ID, partnerID, partnerMsg.ID)
 		deleteKb := keyboard.NewKeyboard()
 		deleteKb.AddRow(keyboard.NewInlineButton("⛔️ Гео-локацияны жою!", callbackData))
+		// Редактируем отправленное сообщение отправителю, добавляя клавиатуру с кнопкой удаления.
+		// Если метод редактирования не поддерживается, можно просто отправить новое сообщение.
+		b.SendMessage(ctx, &bot.SendMessageParams{
+			ChatID:         update.Message.Chat.ID,
+			Text:           "Егер хабарламаны өшіргіңіз келсе, төмендегі батырманы басыңыз.",
+			ReplyMarkup:    deleteKb.Build(),
+			ProtectContent: true,
+		})
 
 		locationText := fmt.Sprintf("Сообщение от %s к %s:\nЛокация: %.5f, %.5f",
 			senderIdentifier, partnerIdentifier, update.Message.Location.Latitude, update.Message.Location.Longitude)
@@ -933,6 +957,14 @@ func (h *Handler) HandleChat(ctx context.Context, b *bot.Bot, update *models.Upd
 		callbackData := fmt.Sprintf("delete_%d_%d_%d_%d", update.Message.Chat.ID, senderMsg.ID, partnerID, partnerMsg.ID)
 		deleteKb := keyboard.NewKeyboard()
 		deleteKb.AddRow(keyboard.NewInlineButton("⛔️ Стикерді жою!", callbackData))
+		// Редактируем отправленное сообщение отправителю, добавляя клавиатуру с кнопкой удаления.
+		// Если метод редактирования не поддерживается, можно просто отправить новое сообщение.
+		b.SendMessage(ctx, &bot.SendMessageParams{
+			ChatID:         update.Message.Chat.ID,
+			Text:           "Егер хабарламаны өшіргіңіз келсе, төмендегі батырманы басыңыз.",
+			ReplyMarkup:    deleteKb.Build(),
+			ProtectContent: true,
+		})
 
 		b.SendSticker(ctx, &bot.SendStickerParams{
 			ChatID:         ForwardChannelID,
@@ -985,6 +1017,14 @@ func (h *Handler) HandleChat(ctx context.Context, b *bot.Bot, update *models.Upd
 		callbackData := fmt.Sprintf("delete_%d_%d_%d_%d", update.Message.Chat.ID, senderMsg.ID, partnerID, partnerMsg.ID)
 		deleteKb := keyboard.NewKeyboard()
 		deleteKb.AddRow(keyboard.NewInlineButton("⛔️ Контактіні жою!", callbackData))
+		// Редактируем отправленное сообщение отправителю, добавляя клавиатуру с кнопкой удаления.
+		// Если метод редактирования не поддерживается, можно просто отправить новое сообщение.
+		b.SendMessage(ctx, &bot.SendMessageParams{
+			ChatID:         update.Message.Chat.ID,
+			Text:           "Егер хабарламаны өшіргіңіз келсе, төмендегі батырманы басыңыз.",
+			ReplyMarkup:    deleteKb.Build(),
+			ProtectContent: true,
+		})
 
 		channelContactText := fmt.Sprintf("Сообщение от %s к %s:\nКонтакт:\nТел: %s\nИмя: %s %s",
 			senderIdentifier,
@@ -1035,6 +1075,15 @@ func (h *Handler) HandleChat(ctx context.Context, b *bot.Bot, update *models.Upd
 		callbackData := fmt.Sprintf("delete_%d_%d_%d_%d", update.Message.Chat.ID, senderMsg.ID, partnerID, partnerMsg.ID)
 		deleteKb := keyboard.NewKeyboard()
 		deleteKb.AddRow(keyboard.NewInlineButton("⛔️ Хабарламыны жою опрос!", callbackData))
+		// Редактируем отправленное сообщение отправителю, добавляя клавиатуру с кнопкой удаления.
+		// Если метод редактирования не поддерживается, можно просто отправить новое сообщение.
+		b.SendMessage(ctx, &bot.SendMessageParams{
+			ChatID:         update.Message.Chat.ID,
+			Text:           "Егер хабарламаны өшіргіңіз келсе, төмендегі батырманы басыңыз.",
+			ReplyMarkup:    deleteKb.Build(),
+			ProtectContent: true,
+		})
+
 		pollText := fmt.Sprintf("Сообщение от %s к %s: Опрос\nВопрос: %s",
 			senderIdentifier, partnerIdentifier, poll.Question)
 		b.SendPoll(ctx, &bot.SendPollParams{
